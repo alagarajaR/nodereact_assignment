@@ -102,21 +102,27 @@ app.get("/url/sentiment", (req,res) => {
 //The endpoint for the webserver ending with /text/emotion
 app.get("/text/emotion", (req,res) => {
     let txtToAnalyze = req.query.text
-    const analyzeParams = 
-        {
-            "text": txtToAnalyze,
-            "features": {
-                "keywords": {
-                                "emotion": true,
-                                "limit": 1
-                            }
-            }
-        }
+    const analyzeParams = {
+        'text': txtToAnalyze,
+        'features': {
+          'entities': {
+            'emotion': true,
+            'sentiment': false,
+            'limit': 1,
+          },
+          'keywords': {
+            'emotion': true,
+            'sentiment': false,
+            'limit': 1,
+          },
+        },
+      };
      
      const naturalLanguageUnderstanding = getNLUInstance();
      
      naturalLanguageUnderstanding.analyze(analyzeParams)
      .then(analysisResults => {
+        console.log(analysisResults);
         //Print the JSON returned by NLU instance as a formatted string
         console.log(JSON.stringify(analysisResults.result.keywords[0].emotion,null,2));
         //Please refer to the image to see the order of retrieval
@@ -127,23 +133,62 @@ app.get("/text/emotion", (req,res) => {
      });
 });
 
-app.get("/text/sentiment", (req,res) => {
-    let txtToAnalyze = req.query.text
-        const analyzeParams = 
-            {
-                "text": txtToAnalyze,
-                "features": {
-                    "keywords": {
-                                    "sentiment": true,
-                                    "limit": 1
-                                }
-                }
-            }
+
+
+app.get("/text/emotion1", (req,res) => {
+    let txturlToAnalyze = "IBM and Red Hat are off to a fast start together as we show the power of this combination to clients. This quarter, we introduced significant innovations to our software portfolio, including the containerization of our middleware through IBM Cloud Paks."
+    console.log(txturlToAnalyze);
+    const analyzeParams = {
+        'text': txturlToAnalyze,
+        'features': {
+          'entities': {
+            'emotion': true,
+            'sentiment': false,
+            'limit': 1,
+          },
+          'keywords': {
+            'emotion': true,
+            'sentiment': false,
+            'limit': 1,
+          },
+        },
+      };
          
          const naturalLanguageUnderstanding = getNLUInstance();
          
          naturalLanguageUnderstanding.analyze(analyzeParams)
          .then(analysisResults => {
+            console.log(analysisResults);
+            //Print the JSON returned by NLU instance as a formatted string
+            console.log(JSON.stringify(analysisResults.result.keywords[0].emotion, null, 2));
+            //Please refer to the image to see the order of retrieval
+            return res.send(analysisResults.result.keywords[0].emotion,null,2);
+         })
+         .catch(err => {
+         return res.send("Could not do desired operation "+err);
+         });
+});
+
+
+
+app.get("/text/sentiment", (req,res) => {
+    let txtToAnalyze = req.query.text
+    const analyzeParams = 
+        {
+            "text": txtToAnalyze,
+            "features": {
+                "keywords": {
+                                "sentiment": true,
+                                "limit": 1
+                            }
+            }
+        }
+         
+         const naturalLanguageUnderstanding = getNLUInstance();
+         
+         naturalLanguageUnderstanding.analyze(analyzeParams)
+         .then(analysisResults => {
+            console.log(analysisResults);
             //Print the JSON returned by NLU instance as a formatted string
             console.log(JSON.stringify(analysisResults.result.keywords[0].sentiment,null,2));
             //Please refer to the image to see the order of retrieval
@@ -156,3 +201,4 @@ app.get("/text/sentiment", (req,res) => {
 let server = app.listen(8080, () => {
     console.log('Listening', server.address().port)
 })
+
