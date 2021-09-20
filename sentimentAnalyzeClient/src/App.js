@@ -4,6 +4,10 @@ import EmotionTable from './EmotionTable.js';
 import React from 'react';
 
 class App extends React.Component {
+
+  componentDidMount(){
+    document.title = "Sentiment Analyzer"
+  }
   /*
   We are setting the component as a state named innercomp.
   When this state is accessed, the HTML that is set as the 
@@ -76,6 +80,7 @@ class App extends React.Component {
   render() {
     return (  
       <div className="App">
+        
       <button className="btn btn-info" onClick={()=>{this.renderOutput('text')}}>Text</button>
         <button className="btn btn-dark"  onClick={()=>{this.renderOutput('url')}}>URL</button>
         <br/><br/>
